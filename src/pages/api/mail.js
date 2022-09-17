@@ -31,7 +31,7 @@ export default async (req, res) => {
   .catch((error) => {
     console.error(error)
   })
-
+  
   res.status(200).json({ name: 'ok' })
 
 }

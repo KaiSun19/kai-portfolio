@@ -5,7 +5,6 @@ import {  styled } from '@mui/material/styles';
 import { Grid, TextField, Card, CardContent, Typography } from '@mui/material';
 import Button from '../../styles/GlobalComponents/Button';
 
-
 const StyledTextField = styled(TextField)({
   '& label.Mui-focused': {
     color: 'white',
@@ -56,7 +55,6 @@ const ContactMe = () => {
     }).then( 
       location.reload()
     )
-
 
   }
 
