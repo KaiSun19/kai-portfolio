@@ -53,7 +53,7 @@ const ContactMe = () => {
       method: 'POST',
       body: JSON.stringify(formData) // sends formData to mail api endpoint
     }).then( 
-      // location.reload()
+      location.reload()
     )
 
   }
