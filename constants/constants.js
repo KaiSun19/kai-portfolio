@@ -8,7 +8,7 @@ export const projects = [
   {
     title: 'Yeezy Ecommerce Website',
     description: "Using React and MUI for the front end and Firebase for the back end, I was able to create a full stack ecommerce shop. What's cool is that the data for the inventory is actually stored in a google sheets and is requested via PapaParse. ",
-      image: '/images/yeezy-drops-demo.png',
+      image: '/images/yeezy_full_icon.jpg',
       tags: ['React', 'Firebase', 'MUI', 'SASS'],
     source: 'https://yeezydrops.web.app/',
     visit: 'https://yeezydrops.web.app/',
