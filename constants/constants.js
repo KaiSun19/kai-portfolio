@@ -17,10 +17,10 @@ export const projects = [
   {
     title: 'Aidea Social Media Website',
     description:"Aidea is a social media app inspired by Instagram made using React, Firebase, and MUI",
-    image: '/images/aidea-demo.png',
+    image: '/images/AIDEA.jpg',
     tags: ['React', 'MUI', 'Firebase'],
-    source: 'in dev',
-    visit: 'in dev',
+    source: 'https://aidea-13e1e.web.app/',
+    visit: 'https://aidea-13e1e.web.app/',
     id: 1,
   },
   {
