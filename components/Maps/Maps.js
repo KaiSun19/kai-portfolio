@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Section, SectionDivider, SectionText, SectionTitle } from '../../styles/GlobalComponents';
 import Map, {Marker} from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -8,11 +8,29 @@ import { List, ListContainer, ListItem, ListParagraph, ListTitle } from '../Tech
 const map_api_key = process.env.NEXT_PUBLIC_MAPBOX_API_KEY;
 
 
-const Maps = () => (
+const Maps = () => {
 
-    <Section id="tech">
+    const mapsRef = useRef();
+
+    useEffect(()=>{
+        const observer = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if(entry.isIntersecting){
+              document.querySelector('.map-div').classList.add('fadeInUpClass');
+            }
+          })
+        });
+        if(mapsRef.current){
+          observer.observe(mapsRef.current);
+        }
+      },[mapsRef]
+      )
+
+    return(
+
+        <Section id="tech">
         <SectionDivider divider />
-        <SectionTitle>Find me here</SectionTitle>
+        <SectionTitle ref = {mapsRef}>Find me here</SectionTitle>
         <div className='map-div'>
             <MapContainer>
                 <Map
@@ -30,16 +48,16 @@ const Maps = () => (
 
                 </Map>
             </MapContainer>
-            <MapText style = {{marginLeft : 10}}>
+            <MapText className='mapTextContainer'>
                 <ul>
                     <li>
-                        Address : 27-28, Student Centre, Gordon Square, London WC1H 0AH
+                        <strong className='map-text-headers'>Address</strong> : 27-28, Student Centre, Gordon Square, London WC1H 0AH
                     </li>
                     <li>
-                        <strong>Location</strong> : Student Centre
+                        <strong className='map-text-headers'>Location</strong> : Student Centre
                     </li>
                     <li>
-                        <strong>Activity</strong> : Coding, Drinking Coffee
+                        <strong className='map-text-headers'>Activity</strong> : Coding, Drinking Coffee
                     </li>
                 </ul>
 
@@ -48,6 +66,8 @@ const Maps = () => (
         </div>
 
     </Section>
-);
+
+    )
+};
 
 export default Maps;

@@ -1,6 +1,6 @@
 .contact-input{
 
-    margin: 0.5rem;
+    margin: 0.5rem !important;
 
     .MuiOutlinedInput-root{
           border-color: red
@@ -38,4 +38,60 @@
     @media screen and (max-width: 640px) {
         flex-direction: column;
       }
+}
+
+// global styles
+
+@keyframes fadeInUp{
+    0%{transform:translate(0px, 100px); opacity: 0;}
+    100%{transform:translate(0px, 0); opacity: 1;}
+}
+
+.fadeInUpClass{
+    animation: fadeInUp;
+}
+
+.project-card, .tech-list, .carousel-container, .map-div, .contactGridRow{
+    opacity: 0;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+}
+
+.contactGridRow{
+    animation-duration: 0.5s;
+}
+
+@for $i from 0 through 2 {
+    #project-#{$i}{
+        animation-delay: #{$i + 0.5 /3}s;
+    }
+}
+
+@for $i from 0 through 4 {
+    #contactGridRow-#{$i}{
+        animation-delay: #{ 0.3 /5}s;
+    }
+}
+
+
+.map-text-headers{
+    background: linear-gradient(121.57deg, #FFFFFF 18.77%, rgba(255, 255, 255, 0.66) 60.15%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: bold;
+    color: white;
+    margin-right: 5px;
+}
+
+.mapTextContainer{
+    margin-left: 30px;
+}
+
+@media screen and (max-width: 390px) {
+
+    .mapTextContainer{
+        margin-left: 0;
+        margin-top: 20px;
+    }
+    
 }

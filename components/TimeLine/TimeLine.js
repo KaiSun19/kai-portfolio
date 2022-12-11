@@ -9,6 +9,8 @@ const TOTAL_CAROUSEL_COUNT = TimeLineData.length;
 const Timeline = () => {
   const [activeItem, setActiveItem] = useState(0);
   const carouselRef = useRef();
+  const timelineRef = useRef();
+
 
   const scroll = (node, left) => {
     return node.scrollTo({ left, behavior: 'smooth' });
@@ -42,14 +44,29 @@ const Timeline = () => {
     window.addEventListener('resize', handleResize);
   }, []);
 
+  // useEffect for fadeInUp animation
+
+  useEffect(()=>{
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          document.querySelector('.carousel-container').classList.add('fadeInUpClass');
+        }
+      })
+    });
+    if(timelineRef.current){
+      observer.observe(timelineRef.current);
+    }
+  },[timelineRef])
+
   return (
     <Section id="about">
     <SectionDivider divider />
       <SectionTitle>About Me</SectionTitle>
-      <SectionText>
+      <SectionText ref = {timelineRef}>
         I'm quietly confident, naturally curious, and perpetually working on improving my chops one design problem at a time.
       </SectionText>
-      <CarouselContainer ref={carouselRef} onScroll={handleScroll}>
+      <CarouselContainer ref={carouselRef} onScroll={handleScroll} className = 'carousel-container'>
         {TimeLineData.map((item, index) =>{
           return (
             <CarouselMobileScrollNode

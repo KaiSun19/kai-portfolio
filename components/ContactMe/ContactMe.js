@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import { Section, SectionDivider, SectionTitle } from '../../styles/GlobalComponents';
 import {  styled } from '@mui/material/styles';
@@ -36,8 +36,9 @@ const StyledTextField = styled(TextField)({
   },
 });
 
-// START BY DOING GOOGLE MAPS 
 const ContactMe = () => {
+
+  const contactMeRef = useRef();
 
   async function handleOnSubmit(e) {
     e.preventDefault();
@@ -58,26 +59,47 @@ const ContactMe = () => {
 
   }
 
+  //useEffect for fadeInUpAnimation 
+
+  useEffect(()=>{
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          document.querySelector('#contactGridRow-0').classList.add('fadeInUpClass');
+          document.querySelector('#contactGridRow-1').classList.add('fadeInUpClass');
+          document.querySelector('#contactGridRow-2').classList.add('fadeInUpClass');
+          document.querySelector('#contactGridRow-3').classList.add('fadeInUpClass');
+          document.querySelector('#contactGridRow-4').classList.add('fadeInUpClass');
+        }
+      })
+    });
+    if(contactMeRef.current){
+      observer.observe(contactMeRef.current);
+    }
+  },[contactMeRef])
+
+
+
 return (
 
     <Section id="contact" >
       <SectionDivider divider />
-      <SectionTitle>Get in touch</SectionTitle>
+      <SectionTitle ref = {contactMeRef}>Get in touch</SectionTitle>
       <form method='post' onSubmit={handleOnSubmit}>
         <Grid container spacing={1} className = 'contact-grid'>
-          <Grid xs={12} sm = {6} item>
+          <Grid xs={12} sm = {6} item className='contactGridRow' id = 'contactGridRow-0'>
             <StyledTextField placeholder="Enter your name" variant="outlined" name = 'fullname' fullWidth required className='contact-input' />
           </Grid>
-          <Grid item xs={12}  sm = {6}>
+          <Grid item xs={12}  sm = {6} className='contactGridRow' id = 'contactGridRow-1'>
             <StyledTextField type="email" placeholder="Enter email"  name = 'email' variant="outlined" fullWidth required className='contact-input' />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} className='contactGridRow' id = 'contactGridRow-2'>
             <StyledTextField  name = 'subject' placeholder="Enter Subject" variant="outlined" fullWidth required  className='contact-input'/>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} className='contactGridRow' id = 'contactGridRow-3'>
             <StyledTextField name = 'message' multiline rows={4} placeholder="Type your message here" variant="outlined" fullWidth required className='contact-input' />
           </Grid>
-          <Grid item xs={12} className = 'contact-button'>
+          <Grid item xs={12} className = 'contact-button contactGridRow' id = 'contactGridRow-4'>
             <Button type="submit" >Submit</Button>
           </Grid>
         </Grid>
