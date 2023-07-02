@@ -18,7 +18,7 @@ export default async (req, res) => {
   `;
 
   await mail.send({
-    to: 'kai@kaidev.co.uk',
+    to: 'yksun15@gmail.com',
     from: 'kai@kaidev.co.uk',
     subject: `${body.subject}`,
     text: message,
