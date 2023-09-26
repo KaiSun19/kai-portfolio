@@ -1,14 +1,15 @@
-import Theme from '../styles/theme';
-import '../styles/ContactMe.scss';
-
+import Theme from "../styles/theme";
+import "../styles/ContactMe.scss";
+import { KaiProvider } from "../Context";
 
 export default function App({ Component, pageProps }) {
   return (
     <>
       <Theme>
-        <Component {...pageProps} />
+        <KaiProvider>
+          <Component {...pageProps} />
+        </KaiProvider>
       </Theme>
     </>
   );
 }
- 
