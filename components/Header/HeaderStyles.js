@@ -1,5 +1,5 @@
-import { IoIosArrowDropdown } from 'react-icons/io';
-import styled from 'styled-components';
+import { IoIosArrowDropdown } from "react-icons/io";
+import styled from "styled-components";
 
 export const Container = styled.div`
   display: grid;
@@ -8,7 +8,7 @@ export const Container = styled.div`
   grid-column-gap: 2rem;
   padding: 1rem;
   padding-top: 2rem;
-
+  margin: 1rem auto;
 
   @media ${(props) => props.theme.breakpoints.sm} {
     display: grid;
@@ -20,25 +20,25 @@ export const Container = styled.div`
 `;
 
 export const Span = styled.div`
-
-  font-size : 2rem;
-
+  font-size: 2rem;
 `;
 export const Div1 = styled.div`
   grid-area: 1 / 1 / 2 / 2;
   display: flex;
   flex-direction: row;
   align-content: center;
+  align-items: center;
   @media ${(props) => props.theme.breakpoints.sm} {
-    grid-area: 1 / 1 / 2 / 3;
+    grid-area: 1 / 2 / 2 / 3;
   }
 `;
 export const Div2 = styled.div`
   grid-area: 1 / 2 / 2 / 4;
   display: flex;
   justify-content: space-around;
+  align-items: center;
   @media ${(props) => props.theme.breakpoints.sm} {
-    grid-area: 2 / 2 / 3 / 5;
+    grid-area: 2 / 1 / 3 / 6;
   }
 `;
 export const Div3 = styled.div`
@@ -48,7 +48,7 @@ export const Div3 = styled.div`
   align-items: center;
   @media ${(props) => props.theme.breakpoints.sm} {
     align-items: center;
-    grid-area: 1 / 4 / 2 / 6;
+    grid-area: 1 / 3 / 2 / 5;
   }
 `;
 
@@ -101,8 +101,8 @@ export const NavProductsIcon = styled(IoIosArrowDropdown)`
   display: flex;
   align-self: center;
   transition: 0.3s ease;
-  opacity: ${({ isOpen }) => (isOpen ? '1' : '.75')};
-  transform: ${({ isOpen }) => (isOpen ? 'scaleY(-1)' : 'scaleY(1)')};
+  opacity: ${({ isOpen }) => (isOpen ? "1" : ".75")};
+  transform: ${({ isOpen }) => (isOpen ? "scaleY(-1)" : "scaleY(1)")};
 
   &:hover {
     opacity: 1;
@@ -114,18 +114,16 @@ export const NavProductsIcon = styled(IoIosArrowDropdown)`
   }
 `;
 
-
-// Social Icons 
+// Social Icons
 
 export const SocialIcons = styled.a`
-transition: 0.3s ease;
-color: white;
-border-radius: 50px;
+  transition: 0.3s ease;
+  color: white;
+  border-radius: 50px;
   padding: 8px;
-&:hover {
+  &:hover {
     background-color: #212d45;
     transform: scale(1.2);
     cursor: pointer;
-    
   }
-`
+`;
