@@ -1,8 +1,12 @@
-import React from 'react';
+import React from "react";
 
-import { Section, SectionText, SectionTitle } from '../../styles/GlobalComponents';
-import Button from '../../styles/GlobalComponents/Button';
-import { LeftSection } from './HeroStyles';
+import {
+  Section,
+  SectionText,
+  SectionTitle,
+} from "../../styles/GlobalComponents";
+import Button from "../../styles/GlobalComponents/Button";
+import { LeftSection } from "./HeroStyles";
 
 const Hero = (props) => (
   <div>
@@ -10,13 +14,11 @@ const Hero = (props) => (
       <LeftSection>
         <SectionTitle>
           Hello, <br />
-            My name is Kai 
+          My name is Kai
         </SectionTitle>
-        <SectionText>
-          Student | Frontend  Developer | UX Designer
-        </SectionText>
-        <Button onClick = {()=> window.location = '/#projects'}>
-          See my latest 
+        <SectionText>UX Engineer</SectionText>
+        <Button onClick={() => (window.location = "/#projects")}>
+          See my latest
         </Button>
       </LeftSection>
     </Section>
