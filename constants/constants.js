@@ -1,7 +1,5 @@
-import { DiFirebase, DiReact, DiZend } from "react-icons/di";
+import { DiFirebase, DiReact } from "react-icons/di";
 import { FiFigma } from "react-icons/fi";
-
-// write in dev if project is not finished yet
 
 export const projects = [
   {
@@ -15,7 +13,7 @@ export const projects = [
       { name: "MUI", link: "https://mui.com/" },
       { name: "SASS", link: "https://sass-lang.com/" },
     ],
-    source: "https://yeezydrops.herokuapp.com/",
+    source: "https://github.com/KaiSun19/YeezyShop",
     visit: "https://yeezydrops.herokuapp.com/",
     id: 0,
   },
@@ -29,7 +27,7 @@ export const projects = [
       { name: "MUI", link: "https://mui.com/" },
       { name: "Firebase", link: "https://firebase.google.com/" },
     ],
-    source: "https://aidea-13e1e.web.app/",
+    source: "https://github.com/KaiSun19/Aidea",
     visit: "https://aidea-13e1e.web.app/",
     id: 1,
   },
@@ -62,12 +60,14 @@ export const TechnologyExp = [
   {
     Category: "Front End",
     Icon: <DiReact size="3rem" />,
-    Description: "Experience with NextJs, ReactJS and Material UI ",
+    Description:
+      "Experience with NextJs, ReactJS, EmberJS, Tailwind CSS and Material UI ",
   },
   {
     Category: "Back End",
     Icon: <DiFirebase size="3rem" />,
-    Description: "Experience with Firebase, Node, and Express ",
+    Description:
+      "Experience with Firebase, Node, Google Cloud Functions, and Express ",
   },
   {
     Category: "Design",
@@ -77,17 +77,22 @@ export const TechnologyExp = [
 ];
 
 export const TimeLineData = [
-  {
-    year: 2020,
-    month: "Jan",
-    text: "Started my coding journey as a hobbyist trader",
-  },
   { year: 2020, month: "May", text: "Developed an automated trading bot" },
   { year: 2021, month: "Feb", text: "Started The Odin Project" },
   { year: 2021, month: "Aug", text: "Finished The Odin Project" },
   {
     year: 2022,
     month: "Jan",
-    text: "Currently working as a freelance Front End Developer",
+    text: "Started working as a freelance developer",
+  },
+  {
+    year: 2022,
+    month: "Jun",
+    text: "Crowdstrike Internship",
+  },
+  {
+    year: 2023,
+    month: "Jun",
+    text: "Full time Front End Engineer at CrowdStrike",
   },
 ];
