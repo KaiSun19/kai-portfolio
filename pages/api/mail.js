@@ -1,13 +1,10 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
+const mail = require("@sendgrid/mail");
 
-const mail = require('@sendgrid/mail');
-
-
-mail.setApiKey(process.env.SENDGRID_API_KEY);
+mail.setApiKey(process.env.NEXT_PUBLIC_SENDGRID_API_KEY);
 
 export default async (req, res) => {
-
   const body = JSON.parse(req.body);
 
   const message = `
@@ -17,20 +14,20 @@ export default async (req, res) => {
     Message: ${body.message}
   `;
 
-  await mail.send({
-    to: 'yksun15@gmail.com',
-    from: 'kai@kaidev.co.uk',
-    subject: `${body.subject}`,
-    text: message,
-    html: message.replace(/\r\n/g, '<br>'),
-  }).then(() => {
-    console.log('Email sent')
-  })
-  .catch((error) => {
-    console.error(error)
-  })
-  
-  res.status(200).json({ name: 'ok' })
+  await mail
+    .send({
+      to: "yksun15@gmail.com",
+      from: `${body.email}`,
+      subject: `${body.subject}`,
+      text: message,
+      html: message.replace(/\r\n/g, "<br>"),
+    })
+    .then(() => {
+      console.log("Email sent");
+    })
+    .catch((error) => {
+      console.error(error.response.body.errors);
+    });
 
-}
-
+  res.status(200).json({ name: "ok" });
+};

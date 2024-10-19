@@ -32,6 +32,14 @@ const GlobalStyles = createGlobalStyle`
     list-style: none;
   }
 
+  .disabled-state { 
+    opacity: 0.2;
+    background-color: rgba(239, 239, 239, 0.3);
+    color: rgb(84, 84, 84);
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
 `;
 
 export default GlobalStyles;
