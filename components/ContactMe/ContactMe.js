@@ -10,10 +10,10 @@ import {
   SectionTitle,
 } from "../../styles/GlobalComponents";
 import { styled } from "@mui/material/styles";
-import { Grid, TextField, Card, CardContent, Typography, Button as MuiButton} from "@mui/material";
+import { Grid, TextField, Button as MuiButton} from "@mui/material";
 import Button from "../../styles/GlobalComponents/Button";
 
-const StyledTextField = styled(TextField)({
+export const StyledTextField = styled(TextField)({
   "& label.Mui-focused": {
     color: "white",
   },

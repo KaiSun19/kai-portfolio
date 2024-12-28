@@ -17,7 +17,7 @@ export const Section = styled.section`
   }
 
   @media ${(props) => props.theme.breakpoints.sm} {
-    padding: ${(props) => props.nopadding ? "0" : "16px 16px 0" } ;
+    padding: ${(props) => props.nopadding ? "0" : "16px 16px 0" } ;f
 
     width: calc(100vw - 32px);
     flex-direction: column;
@@ -122,13 +122,13 @@ export const SecondaryBtn = styled.button`
   border: 1px solid rgba(255, 255, 255, 0.33);
   box-sizing: border-box;
   border-radius: 999px;
-  padding: 16px 24px;
+  padding: ${(props) => props.header ? '8px' : '16px 24px'};
   font-weight: 600;
   font-size: 18px;
   line-height: 16px;
   width: fit-content;
-  margin-top: 32px;
-  margin-bottom: 80px;
+  margin-top: ${(props) => props.header ? '' : '32px'};
+  margin-bottom: ${(props) => props.header ? '' : '80px'};
   cursor: pointer;
   transition: 0.4s ease;
   &:focus {
@@ -148,18 +148,18 @@ export const SecondaryBtn = styled.button`
   }
 
   @media ${(props) => props.theme.breakpoints.md}{
-    margin-top: 24px; 
-    margin-bottom: 64px;
-    padding: 16px 24px;
+    margin-top: ${(props) => props.header ? '' : '24px'};
+    margin-bottom: ${(props) => props.header ? '' : '64px'};
+    padding: ${(props) => props.header ? '' : '16px 24px'};
     width: fit-content;
     font-size: 20px;
     line-height: 20px;
   }
 
   @media ${(props) => props.theme.breakpoints.sm} {
-    margin-top: 16px;
-    margin-bottom: 40px;
-    padding: 8px 16px;
+    margin-top: ${(props) => props.header ? '' : '16px'};
+    margin-bottom: ${(props) => props.header ? '' : '40px'};
+    padding: ${(props) => props.header ? '' : '8px 16px'};
     width: 100%;
     font-size: 14px;
     line-height: 16px;
@@ -193,7 +193,7 @@ export const ButtonBack = styled.div`
 
   @media ${(props) => props.theme.breakpoints.sm} {
     width: 100%;
-    height: 32px;
+    height: ${({ alt }) => alt ? '52px' : '32px'};
     font-size: 14px;
     margin-bottom: ${({ alt }) => alt ? '0' : '32px'};
   }

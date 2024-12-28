@@ -1,9 +1,10 @@
 import Link from 'next/link';
 import React from 'react';
-import { AiFillGithub, AiFillLinkedin } from 'react-icons/ai';
+import { AiFillGithub, AiFillLinkedin, AiOutlineLogin } from 'react-icons/ai';
 import { DiCssdeck } from 'react-icons/di';
 
 import { Container, Div1, Div2, Div3, NavLink, SocialIcons , Span} from './HeaderStyles';
+import { SecondaryBtn } from '../../styles/GlobalComponents';
 
 const Header = () =>  (
   <Container>
@@ -52,6 +53,11 @@ const Header = () =>  (
       <SocialIcons href = 'https://www.linkedin.com/in/yuankai-sun-2a26011b8/'>
         <AiFillLinkedin  size = '3rem' /> 
       </SocialIcons>
+      <Link href = '/login'>
+        <SecondaryBtn header>
+          <AiOutlineLogin  size = '3rem' /> 
+        </SecondaryBtn>
+      </Link>
     </Div3>
 
   </Container>

@@ -6,9 +6,9 @@ import { Container } from './LayoutStyles'
 
 export const Layout = ({children}) => {
   return (
-    <Container>
+    <Container shortContent>
      <Header/>
-     <main>{children}</main> 
+     <main style={{flex : 1}}>{children}</main> 
      <Footer/>
     </Container>
   )
