@@ -3,31 +3,36 @@ import { Layout } from '../layout/Layout';
 import { Section, SectionText, SectionTitle } from '../styles/GlobalComponents';
 import { StyledTextField } from "../components/ContactMe/ContactMe";
 import Button from '../styles/GlobalComponents/Button';
+import { useAuth } from "../context/AuthContext";
+import { useRouter } from "next/router";
 
 const Login = () => {
+
+    const { setUser} = useAuth();
+    const router = useRouter();
 
     async function handleOnSubmit(e) {
         e.preventDefault();
 
         const formData = {};
-        console.log(e);
         Array.from(e.currentTarget.elements).forEach((field) => {
             if (!field.name) return;
             formData[field.name] = field.value;
         });
 
-        console.log(formData);
+        const res = await fetch("/api/auth/login", {
+            method: "POST",
+            body: JSON.stringify(formData),
+        })
 
-        // await fetch("/api/auth", {
-        //     method: "POST",
-        //     body: JSON.stringify(formData),
-        // })
-        //     .then(() => {
-        //     console.log("Email sent");
-        //     })
-        //     .catch((e) => {
-        //     console.log("error: " + e);
-        //     });
+        if (res.ok) {
+            const { token } = await res.json();
+            sessionStorage.setItem('authToken', token);
+            setUser(formData['username']);
+            router.push('/');
+        } else {
+            throw new Error('Failed to log in');
+        };
     }
 
   return (

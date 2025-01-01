@@ -1,13 +1,16 @@
 import Theme from '../styles/theme';
 import '../styles/ContactMe.scss';
+import { AuthProvider } from '../context/AuthContext';
 
 
 export default function App({ Component, pageProps }) {
   return (
     <>
-      <Theme>
-        <Component {...pageProps} />
-      </Theme>
+      <AuthProvider>
+        <Theme>
+          <Component {...pageProps} />
+        </Theme>
+      </AuthProvider>
     </>
   );
 }
