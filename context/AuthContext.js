@@ -6,10 +6,11 @@ export const AuthProvider = ({children}) => {
 
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [authAlertOpen, setAuthAlertOpen] = useState(null);
 
 
     useEffect(() => {
-        const token = localStorage.getItem('authToken');
+        const token = sessionStorage.getItem('authToken');
         if (token) {
             const decodedToken = JSON.parse(atob(token.split('.')[1]));
             setUser({ username: decodedToken.username });
@@ -17,13 +18,7 @@ export const AuthProvider = ({children}) => {
         setLoading(false);
     }, []);
 
-
-    useEffect(()=> {
-        console.log(user);
-    }, [user])
-
-
-    return(<AuthContext.Provider value = {{user , setUser, loading, setLoading }}>
+    return(<AuthContext.Provider value = {{user , setUser, loading, setLoading, authAlertOpen, setAuthAlertOpen }}>
         {children}
     </AuthContext.Provider>)
 }

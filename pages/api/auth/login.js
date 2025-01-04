@@ -27,6 +27,9 @@ export default async function handler(req, res) {
             expiresIn: '1h',
         });
 
+        //sets the Set-Cookie header for the response objeect which can be checked by nextjs middleware
+        res.setHeader('Set-Cookie', `authToken=${token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=86400`);
+
         // Send back the token
         return res.status(200).json({ token });
     } else {

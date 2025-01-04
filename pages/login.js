@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 
 const Login = () => {
 
-    const { setUser} = useAuth();
+    const { setUser, setAuthAlertOpen} = useAuth();
     const router = useRouter();
 
     async function handleOnSubmit(e) {
@@ -26,10 +26,12 @@ const Login = () => {
         })
 
         if (res.ok) {
+            setUser(formData['username']);
             const { token } = await res.json();
             sessionStorage.setItem('authToken', token);
-            setUser(formData['username']);
+            console.log(sessionStorage.getItem('authToken'));
             router.push('/');
+            setAuthAlertOpen('Log in successful');
         } else {
             throw new Error('Failed to log in');
         };

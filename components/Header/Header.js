@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
 import { AiFillGithub, AiFillLinkedin, AiOutlineLogin, AiOutlineLogout } from 'react-icons/ai';
 import { DiCssdeck } from 'react-icons/di';
 
@@ -7,18 +7,52 @@ import { Container, Div1, Div2, Div3, Div4, NavLink, SocialIcons , Span} from '.
 import { SecondaryBtn } from '../../styles/GlobalComponents';
 import { useAuth } from '../../context/AuthContext';
 import { useRouter } from 'next/router';
+import { Alert, AlertTitle, Snackbar, styled } from '@mui/material';
 
 const Header = () => {
 
-  const { user, setUser } = useAuth();
+  const { user, setUser, authAlertOpen, setAuthAlertOpen } = useAuth();
   const router = useRouter();
 
-  const logout = () => {
+  const handleAuthAlertClose = () => {
+    setAuthAlertOpen(null);
+  }
+
+  const logout = async () => {
     router.push('/');
     setUser(null);
     sessionStorage.clear();
+    const res = await fetch("/api/auth/logout", {
+      method : 'POST',
+      credentials : 'include'
+    });
+    if(res.ok){
+      console.log('Logged out');
+      setAuthAlertOpen('Log out successful')
+    }
     return ;
   }
+
+  const StyledAlert = styled(Alert)({
+    "&.MuiAlert-root": {
+      background: "#6b3030",
+      border : '1px solid #d4c0c085',
+    },
+    "&.MuiAlert-colorInfo": {
+        color: "#d4c0c0",
+    },
+    "& .MuiAlert-icon": {
+        color: "#d4c0c0",
+    },
+    "& .MuiAlert-message": {
+        color: "#d4c0c0",
+    },
+    "& .MuiSvgIcon-root": {
+      width : '2rem',
+      height : '2rem',
+      color: "#d4c0c0",
+    }
+});
 
   return (
     (
@@ -84,7 +118,12 @@ const Header = () => {
             </SecondaryBtn>
           }
         </Div4>
-    
+        <Snackbar open={authAlertOpen} anchorOrigin={{vertical: 'top',horizontal: 'right'}} onClose={handleAuthAlertClose} className='mt-8 md:mt-0 mr-20'>
+          <StyledAlert severity='info' onClose={handleAuthAlertClose}>
+            <AlertTitle>Info</AlertTitle>
+            {authAlertOpen}
+          </StyledAlert>
+        </Snackbar>
       </Container>
     )
   )
