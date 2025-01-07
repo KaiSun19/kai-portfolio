@@ -1,12 +1,14 @@
+'use client'
+
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React from 'react';
 import { AiFillGithub, AiFillLinkedin, AiOutlineLogin, AiOutlineLogout } from 'react-icons/ai';
 import { DiCssdeck } from 'react-icons/di';
 
 import { Container, Div1, Div2, Div3, Div4, NavLink, SocialIcons , Span} from './HeaderStyles';
 import { SecondaryBtn } from '../../styles/GlobalComponents';
 import { useAuth } from '../../context/AuthContext';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { Alert, AlertTitle, Snackbar, styled } from '@mui/material';
 
 const Header = () => {
@@ -58,41 +60,30 @@ const Header = () => {
     (
       <Container>
         <Div1>
-          <Link href = '/'>
-            <a style = {{display: 'flex', justifyContent : 'center', color: 'white'}}>
-              <DiCssdeck size='3rem' /><Span>kaidev</Span>
-            </a>
+          <Link href = '/' style = {{display: 'flex', justifyContent : 'center', color: 'white'}}>
+            <DiCssdeck size='3rem' /><Span>kaidev</Span>
           </Link>
         </Div1>
         <Div2>
-          {/* #projects goes to projects section in the same page  */}
           <li>
-            <Link href  = '#projects'> 
-              <NavLink>
+            <NavLink href  = '#projects'>
                 Projects
-              </NavLink>
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link href  = '#tech'> 
-              <NavLink>
-                Technologies
-              </NavLink>
-            </Link>
+            <NavLink href='#tech'>
+              Technologies
+            </NavLink>
           </li>
           <li>
-            <Link href  = '#about'> 
-              <NavLink>
-                About
-              </NavLink>
-            </Link>
+            <NavLink href  = '#about'>
+              About
+            </NavLink>
           </li>
           <li>
-            <Link href  = '#contact'> 
-              <NavLink>
-                Contact
-              </NavLink>
-            </Link>
+            <NavLink href='#contact'>
+              Contact
+            </NavLink>
           </li>
         </Div2>
         <Div3>
@@ -107,11 +98,11 @@ const Header = () => {
         <Div4>
         {
             !user ? (
-            <Link href = '/login'>
               <SecondaryBtn header>
-                <AiOutlineLogin  size = '3rem' /> 
+                <Link href = '/login'>
+                  <AiOutlineLogin  size = '3rem' /> 
+                </Link>
               </SecondaryBtn>
-            </Link>
             ) :
             <SecondaryBtn header onClick={logout}>
               <AiOutlineLogout  size = '3rem' /> 

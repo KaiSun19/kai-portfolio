@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react';
 import { AiFillGithub, AiFillInstagram, AiFillLinkedin } from 'react-icons/ai';
 

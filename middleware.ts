@@ -1,14 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export default async function middleware(req: NextRequest) {
-  //checks current route pathname
-  const path = req.nextUrl.pathname;
  
   // 3. gets username from authToken in local storage
   const token = req.cookies.get('authToken');
   let username;
   if (token) {
-      const decodedToken = JSON.parse(atob(token.split('.')[1]))
+      const decodedToken = JSON.parse(atob(token.value.split('.')[1]))
       username = decodedToken.username;
   }
  

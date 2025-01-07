@@ -96,3 +96,87 @@ export const TimeLineData = [
     text: "Full time Front End Engineer at CrowdStrike",
   },
 ];
+
+
+export const TotalWorkoutPoints = 130;
+
+export const BaseWorkout = [
+  {
+    type : 'chest',
+    points: 50,
+    workouts: [
+      {
+        name: 'pushups',
+        reps: 20,
+        points: 10,
+      },
+      {
+        name: 'dips',
+        reps: 10,
+        points: 16,
+      },
+      {
+        name: 'russian pushups',
+        reps: 10,
+        points: 20,
+      },
+    ],
+  },
+  {
+    type : 'back',
+    points : 30,
+    workouts: [
+      {
+        name: 'pullups',
+        reps: 10,
+        points: 20,
+      },
+      {
+        name: 'muscle ups',
+        reps: 5,
+        points: 20,
+      },
+      {
+        name: '30 second hang',
+        reps: 1,
+        points: 15,
+      },
+    ],
+  },
+  {
+    type: 'abs',
+    points : 50,
+    workouts: [
+      {
+        name: 'crunches',
+        reps: 20,
+        points: 10,
+      },
+      {
+        name: 'decline sit ups',
+        reps: 20,
+        points: 10,
+      },
+      {
+        name: 'hanging leg raises',
+        reps: 10,
+        points: 20,
+      },
+      {
+        name: 'dip leg raises',
+        reps: 10,
+        points: 15,
+      },
+      {
+        name: '10 second dip raise hold',
+        reps: 1,
+        points: 10,
+      },
+      {
+        name: '10 second hanging raise hold',
+        reps: 1,
+        points: 15,
+      },
+    ],
+  },
+];

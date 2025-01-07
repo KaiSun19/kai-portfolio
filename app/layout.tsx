@@ -1,0 +1,25 @@
+import Theme from '../styles/theme';
+import '../styles/ContactMe.scss';
+import '../styles/globals.css';
+import { AuthProvider } from '../context/AuthContext';
+
+import 'tailwindcss/tailwind.css';
+
+export default function RootLayout({
+    children,
+  }: {
+    children: React.ReactNode
+  }) {
+
+    return (
+      <html lang="en">
+        <body>
+            <AuthProvider>
+                <Theme>
+                    {children}
+                </Theme>
+            </AuthProvider>
+        </body>
+      </html>
+    )
+}

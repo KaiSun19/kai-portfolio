@@ -1,10 +1,12 @@
+'use client'
+
 import { Grid} from "@mui/material";
-import { Layout } from '../layout/Layout';
-import { Section, SectionText, SectionTitle } from '../styles/GlobalComponents';
-import { StyledTextField } from "../components/ContactMe/ContactMe";
-import Button from '../styles/GlobalComponents/Button';
-import { useAuth } from "../context/AuthContext";
-import { useRouter } from "next/router";
+import { Layout } from '../../layout/Layout';
+import { Section, SectionText, SectionTitle } from '../../styles/GlobalComponents';
+import { StyledTextField } from "../../components/ContactMe/ContactMe";
+import Button from '../../styles/GlobalComponents/Button';
+import { useAuth } from "../../context/AuthContext";
+import { useRouter } from "next/navigation";
 
 const Login = () => {
 
@@ -29,7 +31,6 @@ const Login = () => {
             setUser(formData['username']);
             const { token } = await res.json();
             sessionStorage.setItem('authToken', token);
-            console.log(sessionStorage.getItem('authToken'));
             router.push('/');
             setAuthAlertOpen('Log in successful');
         } else {
