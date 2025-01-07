@@ -1,10 +1,9 @@
-import type {NextApiRequest } from 'next';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export function POST(req : NextApiRequest) {
+export function POST(req : NextRequest) {
     
     if(req.method === 'POST'){
-        const {authToken} = req.cookies;
+        const authToken = req.cookies.get('authToken');
         if(authToken){
             const response = NextResponse.json({ message: 'Auth Cookie deleted'}, { status : 200});
             response.cookies.set('authToken', '' , {
