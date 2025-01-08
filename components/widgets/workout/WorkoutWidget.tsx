@@ -1,10 +1,11 @@
 "use client"
 
 import { Container } from '@/layout/LayoutStyles';
-import { Accordion, AccordionDetails, AccordionSummary, Slider, styled } from '@mui/material';
-import React from 'react';
+import { Accordion, AccordionDetails, AccordionSummary, AlertTitle, Slider, Snackbar, styled } from '@mui/material';
+import React, { useState } from 'react';
 import { FaChevronDown } from "react-icons/fa";
 import { BaseWorkout } from '@/constants/constants';
+import AlertFlash from '@/components/Alert/Alert';
 
 export interface WorkoutPlan {
   type : string;
@@ -14,6 +15,14 @@ export interface WorkoutPlan {
 
 const WorkoutWidget = () => {
 
+
+  const [ alertOpen, setAlertOpen ] = useState(false);
+  const [alertType, setAlertType] = useState('info');
+  const [ generateButtonDisabled, setGenerateButtonDisabled ] = useState<string | boolean>(false);
+
+  const closeAlert = () => {
+    setAlertOpen(false);
+  }
 
     const generateWorkout = () => {
         let plan: WorkoutPlan[] = [];
@@ -39,10 +48,22 @@ const WorkoutWidget = () => {
 
     const postWorkout = async () => {
       const workout = generateWorkout();
+      setGenerateButtonDisabled(true);
       const res = await fetch('/api/notion/update-workout-log', {
         method : 'POST',
         body : JSON.stringify(workout)
       })
+      setGenerateButtonDisabled(false);
+      if(res.status === 200){
+        setAlertType('info');
+        //@ts-expect-error
+        setAlertOpen('Workout generated successfully')
+      }
+      else if(res.status === 500){
+        setAlertType('error');
+        //@ts-expect-error
+        setAlertOpen('Error generating workout');
+      }
     }
 
     const StyledAccordionSummary = styled(AccordionSummary)({
@@ -62,7 +83,7 @@ const WorkoutWidget = () => {
     (
       <Container className='p-4'>
         <div className="py-0 flex w-full justify-between items-center flex-col gap-4">
-          <button onClick={postWorkout} className="w-1/2 text-grayText text-2xl py-4 px-6 bg-lightRed rounded-[15px] transition duration-500 hover:bg-lightRedHover">
+          <button onClick={postWorkout} className="w-1/2 text-grayText text-2xl py-4 px-6 bg-lightRed rounded-[15px] transition duration-500 hover:bg-lightRedHover" disabled={generateButtonDisabled}>
             Generate
           </button>
           <Accordion sx = {{background : 'none', boxShadow : 'none', width : '100%'}}>
@@ -96,6 +117,7 @@ const WorkoutWidget = () => {
             </AccordionDetails>
           </Accordion>
         </div>
+        <AlertFlash open={alertOpen} onCloseHandler={closeAlert} type={alertType} message={alertOpen} />
       </Container>
     )
   )

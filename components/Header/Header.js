@@ -9,7 +9,7 @@ import { Container, Div1, Div2, Div3, Div4, NavLink, SocialIcons , Span} from '.
 import { SecondaryBtn } from '../../styles/GlobalComponents';
 import { useAuth } from '../../context/AuthContext';
 import { useRouter } from 'next/navigation';
-import { Alert, AlertTitle, Snackbar, styled } from '@mui/material';
+import AlertFlash from '../Alert/Alert';
 
 const Header = () => {
 
@@ -34,27 +34,6 @@ const Header = () => {
     }
     return ;
   }
-
-  const StyledAlert = styled(Alert)({
-    "&.MuiAlert-root": {
-      background: "#6b3030",
-      border : '1px solid #d4c0c085',
-    },
-    "&.MuiAlert-colorInfo": {
-        color: "#d4c0c0",
-    },
-    "& .MuiAlert-icon": {
-        color: "#d4c0c0",
-    },
-    "& .MuiAlert-message": {
-        color: "#d4c0c0",
-    },
-    "& .MuiSvgIcon-root": {
-      width : '2rem',
-      height : '2rem',
-      color: "#d4c0c0",
-    }
-});
 
   return (
     (
@@ -109,12 +88,7 @@ const Header = () => {
             </SecondaryBtn>
           }
         </Div4>
-        <Snackbar open={authAlertOpen} anchorOrigin={{vertical: 'top',horizontal: 'right'}} onClose={handleAuthAlertClose} className='mt-8 md:mt-0 mr-20'>
-          <StyledAlert severity='info' onClose={handleAuthAlertClose}>
-            <AlertTitle>Info</AlertTitle>
-            {authAlertOpen}
-          </StyledAlert>
-        </Snackbar>
+        <AlertFlash open={authAlertOpen} onCloseHandler={handleAuthAlertClose} type="info" message="Log out successful." />
       </Container>
     )
   )
