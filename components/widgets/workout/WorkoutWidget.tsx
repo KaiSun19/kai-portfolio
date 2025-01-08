@@ -6,9 +6,10 @@ import React from 'react';
 import { FaChevronDown } from "react-icons/fa";
 import { BaseWorkout } from '@/constants/constants';
 
-interface WorkoutPlan {
+export interface WorkoutPlan {
   type : string;
   workouts : Record<string, number>;
+  points : number;
 }
 
 const WorkoutWidget = () => {
@@ -31,10 +32,18 @@ const WorkoutWidget = () => {
             }
             current+= points;
           }
-          plan.push({type : workout.type, workouts : workoutMap})
+          plan.push({type : workout.type, workouts : workoutMap, points : current})
         })
-        console.log(plan);
+        return plan;
     };
+
+    const postWorkout = async () => {
+      const workout = generateWorkout();
+      const res = await fetch('/api/notion/update-workout-log', {
+        method : 'POST',
+        body : JSON.stringify(workout)
+      })
+    }
 
     const StyledAccordionSummary = styled(AccordionSummary)({
       "& .MuiAccordionSummary-root":{
@@ -53,7 +62,7 @@ const WorkoutWidget = () => {
     (
       <Container className='p-4'>
         <div className="py-0 flex w-full justify-between items-center flex-col gap-4">
-          <button onClick={generateWorkout} className="w-1/2 text-grayText text-2xl py-4 px-6 bg-lightRed rounded-[15px] transition duration-500 hover:bg-lightRedHover">
+          <button onClick={postWorkout} className="w-1/2 text-grayText text-2xl py-4 px-6 bg-lightRed rounded-[15px] transition duration-500 hover:bg-lightRedHover">
             Generate
           </button>
           <Accordion sx = {{background : 'none', boxShadow : 'none', width : '100%'}}>
