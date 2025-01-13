@@ -9,9 +9,13 @@ module.exports = {
     theme: {
       extend: {
         colors: {
+          background: '#111621',
           grayText: '#d4c0c0',
           lightRed: '#6b3030',
           lightRedHover: '#b02b2b',
+        },
+        animation: {
+          'spin-slow': 'spin 3s linear infinite',
         },
       },
     },

@@ -88,7 +88,7 @@ const Header = () => {
             </SecondaryBtn>
           }
         </Div4>
-        <AlertFlash open={authAlertOpen} onCloseHandler={handleAuthAlertClose} type="info" message="Log out successful." />
+        <AlertFlash open={authAlertOpen} onCloseHandler={handleAuthAlertClose} type="info" message={authAlertOpen} />
       </Container>
     )
   )

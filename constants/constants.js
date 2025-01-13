@@ -103,7 +103,7 @@ export const TotalWorkoutPoints = 130;
 export const BaseWorkout = [
   {
     type : 'chest',
-    points: 50,
+    priority: 5/12,
     workouts: [
       {
         name: 'pushups',
@@ -114,17 +114,19 @@ export const BaseWorkout = [
         name: 'dips',
         reps: 10,
         points: 16,
+        type : 'chest',
       },
       {
         name: 'russian pushups',
         reps: 10,
         points: 20,
+        type : 'chest',
       },
     ],
   },
   {
     type : 'back',
-    points : 30,
+    priority : 2/12,
     workouts: [
       {
         name: 'pullups',
@@ -145,7 +147,7 @@ export const BaseWorkout = [
   },
   {
     type: 'abs',
-    points : 50,
+    priority : 5/12,
     workouts: [
       {
         name: 'crunches',
