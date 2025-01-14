@@ -216,20 +216,6 @@ const WorkoutWidget = () => {
                   </div>
                 </form>
               </div>
-              {/* {
-                BaseWorkout.map(workout => {
-                  return(
-                  <div className='flex w-full justify-between items-center gap-2 flex-col'>
-                    <p className='tex-lg text-left mb-8 w-full'>{workout.type}</p>
-                    <textarea
-                      rows={5}
-                      value={workout.workouts.map(item => item.name).toString()}
-                      className="flex-1 bg-inherit border border-gray-400 rounded-[10px] w-full p-4 mb-4"
-                    />
-                  </div>
-                  )
-                })
-              } */}
             </AccordionDetails>
           </Accordion>
         </div>

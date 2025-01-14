@@ -1,20 +1,28 @@
 'use client'
 
 import Link from 'next/link';
-import React from 'react';
-import { AiFillGithub, AiFillLinkedin, AiOutlineLogin, AiOutlineLogout } from 'react-icons/ai';
+import React, { useState } from 'react';
+import { AiFillGithub, AiFillLinkedin, AiOutlineLogin, AiOutlineLogout, AiOutlineBranches } from 'react-icons/ai';
 import { DiCssdeck } from 'react-icons/di';
+import { GoGear } from "react-icons/go";
 
 import { Container, Div1, Div2, Div3, Div4, NavLink, SocialIcons , Span} from './HeaderStyles';
 import { SecondaryBtn } from '../../styles/GlobalComponents';
 import { useAuth } from '../../context/AuthContext';
 import { useRouter } from 'next/navigation';
 import AlertFlash from '../Alert/Alert';
+import HeaderMenu from '../Menu/Menu';
 
 const Header = () => {
 
   const { user, setUser, authAlertOpen, setAuthAlertOpen } = useAuth();
   const router = useRouter();
+
+  const [menuRef , setMenuRef] = useState(null);
+
+  const handleMenuOpen = (e) => {
+    menuRef ? setMenuRef(null) : setMenuRef(e.currentTarget);
+  }
 
   const handleAuthAlertClose = () => {
     setAuthAlertOpen(null);
@@ -33,7 +41,16 @@ const Header = () => {
       setAuthAlertOpen('Log out successful')
     }
     return ;
+  };
+
+  const goToWidgets = () => {
+    router.push('/widgets');
   }
+
+  const menuElements = [ 
+    {label : 'Widgets', icon : <AiOutlineBranches size='2rem' />, action : () => {goToWidgets()}},
+    {label : 'Log Out', icon : <AiOutlineLogout size='2rem' />, action : async () => {await logout()}}
+  ]
 
   return (
     (
@@ -76,16 +93,21 @@ const Header = () => {
 
         <Div4>
         {
-            !user ? (
+            user ? (
+              <>
+                <SecondaryBtn header onClick={handleMenuOpen}>
+                  <GoGear  size = '3rem' /> 
+                </SecondaryBtn>
+                <HeaderMenu open={menuRef !== null} onCloseHandler={handleMenuOpen} anchor={menuRef} children={menuElements}/>
+              </>
+            ) :
+            (
               <SecondaryBtn header>
                 <Link href = '/login'>
                   <AiOutlineLogin  size = '3rem' /> 
                 </Link>
               </SecondaryBtn>
-            ) :
-            <SecondaryBtn header onClick={logout}>
-              <AiOutlineLogout  size = '3rem' /> 
-            </SecondaryBtn>
+            )
           }
         </Div4>
         <AlertFlash open={authAlertOpen} onCloseHandler={handleAuthAlertClose} type="info" message={authAlertOpen} />
