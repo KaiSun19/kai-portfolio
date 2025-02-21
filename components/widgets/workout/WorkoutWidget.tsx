@@ -63,7 +63,7 @@ const WorkoutWidget = () => {
     setAlertOpen(false);
   }
 
-  const [ generateButtonDisabled, setGenerateButtonDisabled ] = useState<string | boolean>(false);
+  const [ generateButtonDisabled, setGenerateButtonDisabled ] = useState<boolean>(false);
 
   const [totalPoints, setTotalPoints ] = useState(130);
 
