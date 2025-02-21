@@ -3,12 +3,13 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
     if (req.method === 'GET') {
-        const query  = req.nextUrl.searchParams.get('query')
-
+        let query  = req.nextUrl.searchParams.get('query')
         const client = await clientPromise;
         const db = client.db('kai_portfolio');
         const collection = db.collection('exercises');
-
+        if(typeof query === 'string' && query?.length > 0){
+            query = JSON.parse(query);
+        }
         let match;
         try{
             if(typeof query === 'string'){

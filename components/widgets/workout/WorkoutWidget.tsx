@@ -1,12 +1,14 @@
 "use client"
 
 import { Container } from '@/layout/LayoutStyles';
-import { Accordion, AccordionDetails, AccordionSummary, Slider, styled } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { Accordion, AccordionDetails, AccordionSummary, Chip, Slider, styled } from '@mui/material';
+import React, { useEffect, useRef, useState } from 'react';
 import { FaChevronDown, FaMinus } from "react-icons/fa";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { BaseWorkout } from '@/constants/constants';
 import AlertFlash from '@/components/Alert/Alert';
+import { capitalize, colorsInBetween } from '@/utils/utils';
+import MultiSlider from '@/components/utils/MultiSlider';
 
 export interface WorkoutPlan {
   type : string;
@@ -18,7 +20,7 @@ export interface Exercise {
   name : string;
   reps : number;
   points : number;
-  type : 'chest' | 'abs' | 'back' | '';
+  type : 'chest' | 'abs' | 'back' | 'other';
 }
 
 interface ExercisesWithId extends Exercise {
@@ -50,6 +52,10 @@ const WorkoutWidget = () => {
     { value: 200, label: '200' }
   ];
 
+  const exerciseColors = colorsInBetween('13ADC7', '945DD6', 4);
+  
+  const defaultPriorities = {chest : 5/12, abs: 5/12, back: 2/12, other : 0/12};
+
   const [ alertOpen, setAlertOpen ] = useState<string | boolean>(false);
   const [alertType, setAlertType] = useState('info');
 
@@ -61,6 +67,8 @@ const WorkoutWidget = () => {
 
   const [totalPoints, setTotalPoints ] = useState(130);
 
+  const [ exercisePoints, setExercisePoints] = useState({chest : defaultPriorities['chest'] * totalPoints, abs : defaultPriorities['abs'] * totalPoints, back : defaultPriorities['back'] * totalPoints, other : defaultPriorities['other'] * totalPoints})
+
   const onSliderUpdate = (e) => {
     setTotalPoints(e.target.value)
   }
@@ -69,7 +77,8 @@ const WorkoutWidget = () => {
         let plan: WorkoutPlan[] = [];
         BaseWorkout.map((workout, i) => {
           const workoutMap = {};
-          let limit = Math.ceil(totalPoints * workout.priority);
+          let limit = exercisePoints[workout.type];
+          console.log(limit);
           let current = 0;
           while(limit > current){
             let random_number = Math.floor(Math.random() * (workout.workouts.length)) + 0;
@@ -105,16 +114,22 @@ const WorkoutWidget = () => {
       }
     };
 
-    const [exercises, setExercises] = useState([]);
-    const [newExercise, setNewExercise] = useState<Exercise>({name : '', reps : 0, points: 0, type : ''});
+    const [exercises, setExercises] = useState<Exercise[]>([]);
+    const [exerciseTypes, setExerciseTypes] = useState<Exercise['type'][]>(['chest', 'abs', 'back', 'other']);
+    const [newExercise, setNewExercise] = useState<Exercise>({name : '', reps : 0, points: 0, type : 'other'});
 
-    const retrieveExercises = async () =>{
-      const query = encodeURIComponent('');
-      if(!exercises.length){
+    const allExerciseTypesRef = useRef([]);
+
+    const retrieveExercises = async (filter) =>{
+    
+      const query = encodeURIComponent(typeof filter === 'string' ? filter : JSON.stringify(filter));
+      if(!exercises.length || filter !== ''){
         const res = await fetch(`/api/widgets/workouts?query=${query}`, {
           method : 'GET',
         })
-        const data = await res.json();
+        let data = await res.json();
+        const typeOrder = { chest : 1, abs : 2, back: 3, other : 4};
+        data.sort((a, b) => typeOrder[a.type] - typeOrder[b.type]);
         setExercises(data)
       }
     };
@@ -135,15 +150,37 @@ const WorkoutWidget = () => {
           body : JSON.stringify([newExercise])
         });
         if(res.status === 200){
-          setNewExercise({name : '', reps : 0, points: 0, type : ''});
+          setNewExercise({name : '', reps : 0, points: 0, type : 'other'});
+          setExercises(existing => {
+            return [...existing, newExercise];
+          })
           setAlertOpen('Exercise uploaded successfully')
         }
       }
     }
 
+    const typeEnabled = (type) => {
+      return exerciseTypes.includes(type);
+    }
+
+    const toggleExerciseType = (type) => {
+      let filter;
+      if(typeEnabled(type)){
+        filter = exerciseTypes.filter(item => item !== type);
+        retrieveExercises(filter);
+      }
+    }
+
     useEffect(()=>{
-      retrieveExercises()
+      retrieveExercises('')
     }, []);
+
+    useEffect(()=> {
+      if(exercises.length > 0){
+        const typesOnly = exercises.map(item => item.type);
+        setExerciseTypes(typesOnly.filter((v, i , self) => i === self.indexOf(v)));
+      }
+    }, [exercises]);
 
   return (
     (
@@ -151,7 +188,7 @@ const WorkoutWidget = () => {
         <div className="py-0 flex w-full justify-between items-center flex-col gap-4">
           <button onClick={postWorkout} className="flex justify-center w-1/2 text-grayText text-2xl py-4 px-6 bg-lightRed rounded-[15px] transition duration-500 hover:bg-lightRedHover">
             {
-              exercises.length > 0 ?(
+              typeof exercises !== 'string' ?(
                 'Generate'
               ) : 
               (
@@ -171,13 +208,13 @@ const WorkoutWidget = () => {
                       className='mb-12 text-lightRed' sx = {{'& .MuiSlider-markLabel': {color: 'white'}}} />
 
               <p className='text-3xl float-left mb-8 font-bold'>
-                Workouts Included
+                Add a workout
               </p>
               <div className="w-full flex flex-col">
 
                 <div className="flex w-full justify-between gap-4 items-center my-4">
                   <p className='text-grayText'>1. </p>
-                  <button>
+                  <button disabled>
                     <FaMinus className='transition duration-500 hover:text-lightRed'/>
                   </button>
                 </div>
@@ -215,6 +252,27 @@ const WorkoutWidget = () => {
                     </button>
                   </div>
                 </form>
+                <p className='w-full flex flex-start text-3xl float-left mb-8 mt-8 font-bold'>
+                    Change workout points
+                </p>
+                <MultiSlider total={totalPoints} colors={exerciseColors} exerciseTypes={exerciseTypes} points={exercisePoints} setPoints={setExercisePoints}/>
+                <div className="flex justify-start items-center flex-wrap">
+                    {exerciseTypes.map((type : string) => (
+                      <Chip
+                        key={type}
+                        label={type}
+                        onClick={()=> toggleExerciseType(type)}
+                        sx={{
+                          backgroundColor: typeEnabled(type) ? '#6b3030' : '#111621',
+                          color: 'white',
+                          borderColor: '#6b3030',
+                          border: '1px solid',
+                          margin: '0.5rem',
+                          fontSize : '15px'
+                        }}
+                      />
+                    ))}
+                </div>
               </div>
             </AccordionDetails>
           </Accordion>

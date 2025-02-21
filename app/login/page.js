@@ -7,11 +7,14 @@ import { StyledTextField } from "../../components/ContactMe/ContactMe";
 import Button from '../../styles/GlobalComponents/Button';
 import { useAuth } from "../../context/AuthContext";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const Login = () => {
 
     const { setUser, setAuthAlertOpen} = useAuth();
     const router = useRouter();
+
+    const [loginLoading, setLoginLoading] = useState(false);
 
     async function handleOnSubmit(e) {
         e.preventDefault();
@@ -22,12 +25,15 @@ const Login = () => {
             formData[field.name] = field.value;
         });
 
+        setLoginLoading(true);
+
         const res = await fetch("/api/auth/login", {
             method: "POST",
             body: JSON.stringify(formData),
         })
 
         if (res.ok) {
+            setLoginLoading(false);
             setUser(formData['username']);
             const { token } = await res.json();
             sessionStorage.setItem('authToken', token);
@@ -67,7 +73,7 @@ const Login = () => {
                     />
                 </Grid>
                 <Grid item xs={12} sx = {{display : 'flex', justifyContent : 'center'}}>
-                    <Button type='submit'>Log in</Button>
+                    <Button type='submit' disabled={loginLoading}>Log in</Button>
                 </Grid>
             </Grid>
         </form>
