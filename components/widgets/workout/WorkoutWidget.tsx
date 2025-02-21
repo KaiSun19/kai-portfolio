@@ -75,23 +75,25 @@ const WorkoutWidget = () => {
 
     const generateWorkout = () => {
         let plan: WorkoutPlan[] = [];
-        BaseWorkout.map((workout, i) => {
-          const workoutMap = {};
-          let limit = exercisePoints[workout.type];
-          console.log(limit);
-          let current = 0;
-          while(limit > current){
-            let random_number = Math.floor(Math.random() * (workout.workouts.length)) + 0;
-            let {name , reps, points } = workout.workouts[random_number];
-            if(workoutMap[name]){
-              workoutMap[name] += reps;
+        exerciseTypes.map(type => {
+          const limit = exercisePoints[type];
+          const possibleExercises = exercises.filter(exercise => exercise.type === type);
+          if(limit >= possibleExercises.sort((a, b) => a.points - b.points)[0].points){
+            const workoutMap = {}
+            let current = 0;
+            while(limit > current){
+              let random_number = Math.floor(Math.random() * (possibleExercises.length)) + 0;
+              let {name , reps, points } = possibleExercises[random_number];
+              if(workoutMap[name]){
+                workoutMap[name] += reps;
+              }
+              else{
+                workoutMap[name] = reps;
+              }
+              current+= points;
             }
-            else{
-              workoutMap[name] = reps;
-            }
-            current+= points;
+            plan.push({type : type, workouts : workoutMap, points : current})
           }
-          plan.push({type : workout.type, workouts : workoutMap, points : current})
         })
         return plan;
     };
@@ -186,7 +188,7 @@ const WorkoutWidget = () => {
     (
       <Container className='p-4'>
         <div className="py-0 flex w-full justify-between items-center flex-col gap-4">
-          <button onClick={postWorkout} className="flex justify-center w-1/2 text-grayText text-2xl py-4 px-6 bg-lightRed rounded-[15px] transition duration-500 hover:bg-lightRedHover">
+          <button onClick={postWorkout} disabled={generateButtonDisabled} className="flex justify-center w-1/2 text-grayText text-2xl py-4 px-6 bg-lightRed rounded-[15px] transition duration-500 hover:bg-lightRedHover">
             {
               typeof exercises !== 'string' ?(
                 'Generate'
