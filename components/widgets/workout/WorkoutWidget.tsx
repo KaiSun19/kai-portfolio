@@ -14,7 +14,7 @@ import { FaChevronDown, FaMinus } from "react-icons/fa";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { BaseWorkout } from "@/constants/constants";
 import AlertFlash from "@/components/Alert/Alert";
-import { capitalize, colorsInBetween } from "@/utils/utils";
+import { capitalize, colorsInBetween, validateObjectProps } from "@/utils/utils";
 import MultiSlider from "@/components/utils/MultiSlider";
 import { TbSend } from "react-icons/tb";
 
@@ -29,6 +29,13 @@ export interface Exercise {
   reps: number;
   points: number;
   type: "chest" | "abs" | "back" | "other";
+}
+
+export interface WeightedExercise {
+  sets : Array<{sets : number , reps : number , weight : number}>;
+  timestamp?:string;
+  type: 'deadlift' | 'squat';
+  _id?: string;
 }
 
 interface ExercisesWithId extends Exercise {
@@ -48,6 +55,8 @@ const StyledAccordionSummary = styled(AccordionSummary)({
   },
 });
 
+const WEIGHTED_WORKOUTS = ['squat, deadlift'];
+
 const WorkoutWidget = () => {
   const totalPointsMarks = [
     { value: 100, label: "100" },
@@ -66,8 +75,6 @@ const WorkoutWidget = () => {
     back: 2 / 12,
     other: 0 / 12,
   };
-
-  const [weightJournalUploadOpen, setWeightJournalUploadOpen] = useState(false);
 
   const [weightJournal, setWeightJournal] = useState({
     workoutType: "deadlift",
@@ -91,8 +98,46 @@ const WorkoutWidget = () => {
     }));
   };
 
-  const submitWeightJournal = () => {
-    console.log(weightJournal);
+  const submitWeightJournal = async () => {
+    const log: { type: string; sets: Record<string, number>[] } = {
+      type: weightJournal.workoutType,
+      sets: [],
+    };
+    const journal = weightJournal.journal.split(",");
+    journal.map((item) => {
+      if (item[0] === " ") {
+        item = item.slice(1);
+      }
+      const details = item.split(" ");
+      const sets = details[0];
+      const reps = details[1];
+      const weight = details[3];
+      log["sets"].push({
+        sets: parseInt(sets),
+        reps: parseInt(reps),
+        weight: parseInt(weight),
+      });
+    });
+
+    if(!log.sets.every(item => validateObjectProps(item))){
+      setAlertOpen("Undefined values in journal try again.");
+      return;
+    }
+
+    const res = await fetch("/api/widgets/workouts", {
+      method: "POST",
+      body: JSON.stringify(log),
+    });
+    if (res.status === 200) {
+      setWeightJournal({
+        workoutType: "deadlift",
+        journal: "",
+      });
+      setAlertOpen("Log uploaded successfully");
+    }
+    else{
+      setAlertOpen("Error uploading workout journal");
+    }
   };
 
   const closeAlert = () => {
@@ -141,7 +186,8 @@ const WorkoutWidget = () => {
         plan.push({ type: type, workouts: workoutMap, points: current });
       }
     });
-    return plan;
+
+    return addMostRecentWeightedWorkout(plan, weightedWorkoutLogs.current)
   };
 
   const postWorkout = async () => {
@@ -175,7 +221,7 @@ const WorkoutWidget = () => {
     type: "other",
   });
 
-  const allExerciseTypesRef = useRef([]);
+  const weightedWorkoutLogs = useRef([]);
 
   const retrieveExercises = async (filter) => {
     const query = encodeURIComponent(
@@ -191,6 +237,27 @@ const WorkoutWidget = () => {
       setExercises(data);
     }
   };
+
+  const retrieveWeightedWorkoutsLogs = async (exercises) => {
+    const query = encodeURIComponent(
+      typeof exercises === "string" ? exercises : JSON.stringify(exercises)
+    );
+
+      const res = await fetch(`/api/widgets/workouts?query=workout_log${query}`, {
+        method: "GET"
+      }
+    )
+      let data = await res.json();
+      return data;
+  }
+
+  const addMostRecentWeightedWorkout = (workout_plan : WorkoutPlan[] , logs : WeightedExercise[] ) => {
+    const last_workout = logs[logs.length - 2];
+    return [
+      ...workout_plan,
+      {weighted_workout : last_workout}
+    ]
+  }
 
   const updateNewExercise = (e) => {
     const { name, value } = e.target;
@@ -229,8 +296,13 @@ const WorkoutWidget = () => {
     }
   };
 
-  useEffect(() => {
+  const retrieveWorkouts = async () => {
     retrieveExercises("");
+    weightedWorkoutLogs.current = await retrieveWeightedWorkoutsLogs("")
+  }
+
+  useEffect(() => {
+    retrieveWorkouts()
   }, []);
 
   useEffect(() => {

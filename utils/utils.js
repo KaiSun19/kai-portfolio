@@ -54,3 +54,15 @@ export function colorsInBetween(hex1, hex2, steps){
   };
   return colors;
 }
+
+export function validateObjectProps(obj) {
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      const value = obj[key];
+      if (value === undefined || Number.isNaN(value)) {
+        return false; 
+      }
+    }
+  }
+  return true;
+}
