@@ -35,11 +35,15 @@ const Header = () => {
   const [menuRef, setMenuRef] = useState(null);
 
   const handleMenuOpen = (e) => {
-    menuRef ? setMenuRef(null) : setMenuRef(e.currentTarget);
+    if (menuRef) {
+      setMenuRef(null);
+    } else {
+      setMenuRef(e.currentTarget);
+    }
   };
 
   const handleAuthAlertClose = () => {
-    setAuthAlertOpen(null);
+    setAuthAlertOpen(false);
   };
 
   const logout = async () => {
@@ -52,7 +56,7 @@ const Header = () => {
     });
     if (res.ok) {
       console.log("Logged out");
-      setAuthAlertOpen("Log out successful");
+      setAuthAlertOpen(true);
     }
     return;
   };

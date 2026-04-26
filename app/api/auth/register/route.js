@@ -9,8 +9,6 @@ export async function POST(req) {
   const client = await clientPromise;
   const db = client.db("KaiPortfolio");
 
-  debugger;
-
   // Check if the user already exists
   const existingUser = await db.collection("users").findOne({ username });
   if (existingUser) {

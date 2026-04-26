@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import React, { useEffect, useRef } from "react";
 
@@ -58,7 +58,7 @@ const Projects = () => {
               >
                 <Img src={project.image} />
                 <TitleContent>
-                  <HeaderThree title>{project.title}</HeaderThree>
+                  <HeaderThree $title>{project.title}</HeaderThree>
                   <Hr />
                 </TitleContent>
                 <CardInfo className="card-info">{project.description}</CardInfo>

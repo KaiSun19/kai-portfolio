@@ -12,10 +12,7 @@ import {
   CardInfo,
   WidgetIcon,
 } from "./WidgetStyles";
-import {
-  TitleContent,
-  HeaderThree,
-} from "@/components/Projects/ProjectsStyles";
+import { TitleContent, HeaderThree } from "@/components/Projects/typed";
 import { GiMuscleUp } from "react-icons/gi";
 import WorkoutWidget from "@/components/widgets/workout/WorkoutWidget";
 import React from "react";
@@ -53,7 +50,7 @@ const Widgets = () => {
               <WidgetCard key={widget.title}>
                 <TitleContent>
                   <WidgetIcon>{widget.icon ? widget.icon : ""}</WidgetIcon>
-                  <HeaderThree title>{widget.title}</HeaderThree>
+                  <HeaderThree $title>{widget.title}</HeaderThree>
                 </TitleContent>
                 <CardInfo>{widget.description}</CardInfo>
                 {WidgetContents(widget.title)}
