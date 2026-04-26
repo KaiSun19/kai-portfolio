@@ -1,17 +1,17 @@
-'use client'
+"use client";
 
-import BgAnimation from '../components/BackgrooundAnimation/BackgroundAnimation';
-import Hero from '../components/Hero/Hero';
-import Projects from '../components/Projects/Projects';
-import Technologies from '../components/Technologies/Technologies';
-import Timeline from '../components/TimeLine/TimeLine';
-import Maps from '../components/Maps/Maps'
-import ContactMe from '../components/ContactMe/ContactMe';
-import { Layout } from '../layout/Layout';
-import { Section } from '../styles/GlobalComponents';
+import BgAnimation from "../components/BackgrooundAnimation/BackgroundAnimation";
+import Hero from "../components/Hero/Hero";
+import Projects from "../components/Projects/Projects";
+import Technologies from "../components/Technologies/Technologies";
+import Timeline from "../components/TimeLine/TimeLine";
+import Maps from "../components/Maps/Maps";
+import ContactMe from "../components/ContactMe/ContactMe";
+import { Layout } from "../layout/Layout";
+import { Section } from "../styles/GlobalComponents/typed";
+import React from "react";
 
 const Home = () => {
-
   return (
     <Layout>
       <Section grid>

@@ -6,7 +6,7 @@ import {
   Section,
   SectionText,
   SectionTitle,
-} from "../../styles/GlobalComponents";
+} from "../../styles/GlobalComponents/typed";
 import { StyledTextField } from "../../components/ContactMe/ContactMe";
 import Button from "../../styles/GlobalComponents/Button";
 import { useAuth } from "../../context/AuthContext";

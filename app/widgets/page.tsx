@@ -1,7 +1,11 @@
 "use client";
 
 import { Layout } from "@/layout/Layout";
-import { Section, SectionText, SectionTitle } from "@/styles/GlobalComponents";
+import {
+  Section,
+  SectionText,
+  SectionTitle,
+} from "@/styles/GlobalComponents/typed";
 import {
   WidgetCard,
   GridContainer,

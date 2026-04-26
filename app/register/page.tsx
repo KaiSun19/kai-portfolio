@@ -2,7 +2,7 @@
 
 import { Grid } from "@mui/material";
 import { Layout } from "../../layout/Layout";
-import { Section, SectionTitle } from "../../styles/GlobalComponents";
+import { Section, SectionTitle } from "../../styles/GlobalComponents/typed";
 import { StyledTextField } from "../../components/ContactMe/ContactMe";
 import Button from "../../styles/GlobalComponents/Button";
 import { useAuth } from "../../context/AuthContext";
