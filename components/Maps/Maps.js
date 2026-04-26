@@ -1,13 +1,12 @@
-'use client'
+"use client";
 
 import React, { useEffect, useRef } from "react";
 import {
   Section,
   SectionDivider,
-  SectionText,
   SectionTitle,
 } from "../../styles/GlobalComponents";
-import Map, { Marker } from "react-map-gl";
+import Map, { Marker } from "react-map-gl/mapbox";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { MapContainer, MapText } from "./MapsStyles";
 

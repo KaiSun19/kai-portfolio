@@ -12,9 +12,8 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { FaChevronDown, FaMinus } from "react-icons/fa";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { BaseWorkout } from "@/constants/constants";
 import AlertFlash from "@/components/Alert/Alert";
-import { capitalize, colorsInBetween, validateObjectProps } from "@/utils/utils";
+import { colorsInBetween, validateObjectProps } from "@/utils/utils";
 import MultiSlider from "@/components/utils/MultiSlider";
 import { TbSend } from "react-icons/tb";
 
@@ -28,18 +27,14 @@ export interface Exercise {
   name: string;
   reps: number;
   points: number;
-  type: "chest" | "abs" | "back" | "other";
+  type: "chest" | "abs" | "back" | "shoulder";
 }
 
 export interface WeightedExercise {
-  sets : Array<{sets : number , reps : number , weight : number}>;
-  timestamp?:string;
-  type: 'deadlift' | 'squat';
+  sets: Array<{ sets: number; reps: number; weight: number }>;
+  timestamp?: string;
+  type: "deadlift" | "squat";
   _id?: string;
-}
-
-interface ExercisesWithId extends Exercise {
-  _id: string;
 }
 
 const StyledAccordionSummary = styled(AccordionSummary)({
@@ -55,25 +50,28 @@ const StyledAccordionSummary = styled(AccordionSummary)({
   },
 });
 
-const WEIGHTED_WORKOUTS = ['squat, deadlift'];
-
 const WorkoutWidget = () => {
-  const totalPointsMarks = [
-    { value: 100, label: "100" },
-    { value: 120, label: "120" },
-    { value: 140, label: "140" },
-    { value: 160, label: "160" },
-    { value: 180, label: "180" },
-    { value: 200, label: "200" },
-  ];
+  const totalPointsMin = 200;
+  const totalPointsMax = 400;
+  const totalPointsIncrements = 5;
+  const totalPointsStep =
+    (totalPointsMax - totalPointsMin) / totalPointsIncrements;
+
+  const totalPointsMarks = Array.from(
+    { length: totalPointsIncrements + 1 },
+    (_, index) => {
+      const value = totalPointsMin + index * totalPointsStep;
+      return { value, label: String(value) };
+    },
+  );
 
   const exerciseColors = colorsInBetween("13ADC7", "945DD6", 4);
 
   const defaultPriorities = {
-    chest: 5 / 12,
-    abs: 5 / 12,
-    back: 2 / 12,
-    other: 0 / 12,
+    chest: 3 / 12,
+    abs: 2 / 12,
+    back: 3 / 12,
+    shoulder: 1 / 12,
   };
 
   const [weightJournal, setWeightJournal] = useState({
@@ -119,7 +117,7 @@ const WorkoutWidget = () => {
       });
     });
 
-    if(!log.sets.every(item => validateObjectProps(item))){
+    if (!log.sets.every((item) => validateObjectProps(item))) {
       setAlertOpen("Undefined values in journal try again.");
       return;
     }
@@ -134,8 +132,7 @@ const WorkoutWidget = () => {
         journal: "",
       });
       setAlertOpen("Log uploaded successfully");
-    }
-    else{
+    } else {
       setAlertOpen("Error uploading workout journal");
     }
   };
@@ -147,13 +144,15 @@ const WorkoutWidget = () => {
   const [generateButtonDisabled, setGenerateButtonDisabled] =
     useState<boolean>(false);
 
-  const [totalPoints, setTotalPoints] = useState(130);
+  const [totalPoints, setTotalPoints] = useState(
+    totalPointsMin + totalPointsStep * 2,
+  );
 
   const [exercisePoints, setExercisePoints] = useState({
     chest: defaultPriorities["chest"] * totalPoints,
     abs: defaultPriorities["abs"] * totalPoints,
     back: defaultPriorities["back"] * totalPoints,
-    other: defaultPriorities["other"] * totalPoints,
+    shoulder: defaultPriorities["shoulder"] * totalPoints,
   });
 
   const onSliderUpdate = (e) => {
@@ -161,11 +160,11 @@ const WorkoutWidget = () => {
   };
 
   const generateWorkout = () => {
-    let plan: WorkoutPlan[] = [];
+    const plan: WorkoutPlan[] = [];
     exerciseTypes.map((type) => {
       const limit = exercisePoints[type];
       const possibleExercises = exercises.filter(
-        (exercise) => exercise.type === type
+        (exercise) => exercise.type === type,
       );
       if (
         limit >= possibleExercises.sort((a, b) => a.points - b.points)[0].points
@@ -173,9 +172,9 @@ const WorkoutWidget = () => {
         const workoutMap = {};
         let current = 0;
         while (limit > current) {
-          let random_number =
+          const random_number =
             Math.floor(Math.random() * possibleExercises.length) + 0;
-          let { name, reps, points } = possibleExercises[random_number];
+          const { name, reps, points } = possibleExercises[random_number];
           if (workoutMap[name]) {
             workoutMap[name] += reps;
           } else {
@@ -187,7 +186,7 @@ const WorkoutWidget = () => {
       }
     });
 
-    return addMostRecentWeightedWorkout(plan, weightedWorkoutLogs.current)
+    return addMostRecentWeightedWorkout(plan, weightedWorkoutLogs.current);
   };
 
   const postWorkout = async () => {
@@ -212,27 +211,27 @@ const WorkoutWidget = () => {
     "chest",
     "abs",
     "back",
-    "other",
+    "shoulder",
   ]);
   const [newExercise, setNewExercise] = useState<Exercise>({
     name: "",
     reps: 0,
     points: 0,
-    type: "other",
+    type: "shoulder",
   });
 
   const weightedWorkoutLogs = useRef([]);
 
   const retrieveExercises = async (filter) => {
     const query = encodeURIComponent(
-      typeof filter === "string" ? filter : JSON.stringify(filter)
+      typeof filter === "string" ? filter : JSON.stringify(filter),
     );
     if (!exercises.length || filter !== "") {
       const res = await fetch(`/api/widgets/workouts?query=${query}`, {
         method: "GET",
       });
-      let data = await res.json();
-      const typeOrder = { chest: 1, abs: 2, back: 3, other: 4 };
+      const data = await res.json();
+      const typeOrder = { chest: 1, abs: 2, back: 3, shoulder: 4 };
       data.sort((a, b) => typeOrder[a.type] - typeOrder[b.type]);
       setExercises(data);
     }
@@ -240,24 +239,23 @@ const WorkoutWidget = () => {
 
   const retrieveWeightedWorkoutsLogs = async (exercises) => {
     const query = encodeURIComponent(
-      typeof exercises === "string" ? exercises : JSON.stringify(exercises)
+      typeof exercises === "string" ? exercises : JSON.stringify(exercises),
     );
 
-      const res = await fetch(`/api/widgets/workouts?query=workout_log${query}`, {
-        method: "GET"
-      }
-    )
-      let data = await res.json();
-      return data;
-  }
+    const res = await fetch(`/api/widgets/workouts?query=workout_log${query}`, {
+      method: "GET",
+    });
+    const data = await res.json();
+    return data;
+  };
 
-  const addMostRecentWeightedWorkout = (workout_plan : WorkoutPlan[] , logs : WeightedExercise[] ) => {
+  const addMostRecentWeightedWorkout = (
+    workout_plan: WorkoutPlan[],
+    logs: WeightedExercise[],
+  ) => {
     const last_workout = logs[logs.length - 2];
-    return [
-      ...workout_plan,
-      {weighted_workout : last_workout}
-    ]
-  }
+    return [...workout_plan, { weighted_workout: last_workout }];
+  };
 
   const updateNewExercise = (e) => {
     const { name, value } = e.target;
@@ -275,7 +273,7 @@ const WorkoutWidget = () => {
         body: JSON.stringify([newExercise]),
       });
       if (res.status === 200) {
-        setNewExercise({ name: "", reps: 0, points: 0, type: "other" });
+        setNewExercise({ name: "", reps: 0, points: 0, type: "shoulder" });
         setExercises((existing) => {
           return [...existing, newExercise];
         });
@@ -298,11 +296,11 @@ const WorkoutWidget = () => {
 
   const retrieveWorkouts = async () => {
     retrieveExercises("");
-    weightedWorkoutLogs.current = await retrieveWeightedWorkoutsLogs("")
-  }
+    weightedWorkoutLogs.current = await retrieveWeightedWorkoutsLogs("");
+  };
 
   useEffect(() => {
-    retrieveWorkouts()
+    retrieveWorkouts();
   }, []);
 
   useEffect(() => {
@@ -387,10 +385,10 @@ const WorkoutWidget = () => {
             <Slider
               value={totalPoints}
               onChange={(e) => onSliderUpdate(e)}
-              step={10}
+              step={totalPointsStep}
               marks={totalPointsMarks}
-              min={100}
-              max={200}
+              min={totalPointsMin}
+              max={totalPointsMax}
               valueLabelDisplay="on"
               className="mb-12 text-lightRed"
               sx={{ "& .MuiSlider-markLabel": { color: "white" } }}
@@ -451,7 +449,7 @@ const WorkoutWidget = () => {
                       <option value="chest">Chest</option>
                       <option value="abs">Abs</option>
                       <option value="back">Back</option>
-                      <option value="other">Other</option>
+                      <option value="shoulder">Shoulder</option>
                     </select>
                   </div>
                 </div>

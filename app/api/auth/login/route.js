@@ -1,32 +1,39 @@
-import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import clientPromise from "@/utils/mongodb";
 import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
 
 export async function POST(req) {
   if (req.method === "POST") {
     const { username, password } = await req.json();
 
     const client = await clientPromise;
-    const db = client.db("kai_portfolio");
+    const db = client.db("KaiPortfolio");
     const collection = db.collection("users");
+
+    if (process.env.NODE_ENV !== "production") {
+      const usersForDebug = await collection
+        .find({}, { projection: { password: 0 } })
+        .toArray();
+      console.log("[login debug] users collection entries:", usersForDebug);
+    }
 
     // Find the user
     const user = await collection.findOne({ username: username });
     if (!user) {
       return NextResponse.json(
         { message: "Invalid username" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
     // Check the password
-    const isValid = password === user.password;
+    const isValid = await bcrypt.compare(password, user.password);
 
     if (!isValid) {
       return NextResponse.json(
         { message: "Invalid credentials" },
-        { status: 401 }
+        { status: 401 },
       );
     }
     // Create a JWT
@@ -35,7 +42,7 @@ export async function POST(req) {
       process.env.JWT_SECRET,
       {
         expiresIn: "1h",
-      }
+      },
     );
 
     const response = NextResponse.json({ token }, { status: 200 });
@@ -52,7 +59,7 @@ export async function POST(req) {
   } else {
     return NextResponse.json(
       { message: `Method ${req.method} Not Allowed` },
-      { status: 405 }
+      { status: 405 },
     );
   }
 }
