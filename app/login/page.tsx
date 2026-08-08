@@ -45,11 +45,18 @@ const Login = () => {
         sessionStorage.setItem("authToken", token);
         router.push("/");
         setAuthAlertOpen("Log in successful");
+        return;
       }
+
+      const errorData = await res.json().catch(() => ({}));
+      setLoginLoading(false);
+      throw new Error(errorData.message || "Internal Server Error");
     } catch (error) {
       setLoginLoading(false);
       console.error("Login error:", error);
-      setAuthAlertOpen("Log in failed");
+      setAuthAlertOpen(
+        error instanceof Error ? error.message : "Log in failed",
+      );
     }
   }
 

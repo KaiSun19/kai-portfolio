@@ -10,10 +10,14 @@ import Map, { Marker } from "react-map-gl/mapbox";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { MapContainer, MapText } from "./MapsStyles";
 
-const map_api_key = process.env.NEXT_PUBLIC_MAPBOX_API_KEY;
-
 const Maps = () => {
   const mapsRef = useRef();
+  const mapApiKey =
+    process.env.NEXT_PUBLIC_MAPBOX_API_KEY || process.env.MAPBOX_API_KEY;
+
+  if (!mapApiKey) {
+    console.warn("Mapbox API key is not configured.");
+  }
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -41,7 +45,7 @@ const Maps = () => {
               zoom: 14,
             }}
             mapStyle="mapbox://styles/mapbox/streets-v9"
-            mapboxAccessToken={map_api_key}
+            mapboxAccessToken={mapApiKey}
             className="map-container"
           >
             <Marker longitude={-0.11637} latitude={51.502651} color="red" />

@@ -380,8 +380,10 @@ const WorkoutWidget = () => {
           <StyledAccordionSummary expandIcon={<FaChevronDown />}>
             <p className="text-grayText">Settings</p>
           </StyledAccordionSummary>
-          <AccordionDetails className="text-grayText">
-            <p className="text-3xl float-left mb-8 font-bold">Total points</p>
+          <AccordionDetails sx={{ color: "#D4C0C0" }}>
+            <p className="text-3xl float-left mb-8 font-bold text-grayText">
+              Total points
+            </p>
             <Slider
               value={totalPoints}
               onChange={(e) => onSliderUpdate(e)}
@@ -408,7 +410,7 @@ const WorkoutWidget = () => {
                   <input
                     name="name"
                     placeholder="Insert exercise here..."
-                    className="bg-background p-4 border border-lightRed rounded-lg flex-shrink w-full"
+                    className="bg-background p-4 border border-lightRed rounded-lg flex-shrink w-full ml-4"
                     value={newExercise.name}
                     onChange={(e) => updateNewExercise(e)}
                   />

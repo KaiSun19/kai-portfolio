@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-
-const { Client } = require("@notionhq/client");
+import { Client } from "@notionhq/client";
 
 import { getCurrentDate } from "@/utils/utils";
 import { WorkoutPlan } from "@/components/widgets/workout/WorkoutWidget";
@@ -23,7 +22,7 @@ const convertWeightedWorkoutToRichText = (weighted_workout) => {
   let rich_text = `Type: ${weighted_workout.type}\n`;
 
   weighted_workout.sets.forEach((set) => {
-    const { sets, reps, weight } = set; 
+    const { sets, reps, weight } = set;
     rich_text += `• ${sets} ${weight} for ${reps}\n`;
   });
 
@@ -40,8 +39,9 @@ export async function POST(req: NextRequest) {
 
   const workout = await req.json();
 
-  const {weighted_workout} = workout.pop();
-  const rich_text_weighted_workout = convertWeightedWorkoutToRichText(weighted_workout)
+  const { weighted_workout } = workout.pop();
+  const rich_text_weighted_workout =
+    convertWeightedWorkoutToRichText(weighted_workout);
   const rich_text_workout = convertJSONToRichText(workout);
   const total_points = getTotalPoints(workout);
 
@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
           rich_text: [
             {
               text: {
-                content: `${rich_text_workout}\n${rich_text_weighted_workout}`
+                content: `${rich_text_workout}\n${rich_text_weighted_workout}`,
               },
             },
           ],
@@ -80,7 +80,7 @@ export async function POST(req: NextRequest) {
   } else {
     return NextResponse.json(
       { message: `Method ${req.method} Not Allowed` },
-      { status: 405 }
+      { status: 405 },
     );
   }
 }

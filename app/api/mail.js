@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
-const mail = require("@sendgrid/mail");
+import mail from "@sendgrid/mail";
 
 mail.setApiKey(process.env.NEXT_PUBLIC_SENDGRID_API_KEY);
 
