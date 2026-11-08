@@ -396,7 +396,7 @@ const WorkoutWidget = () => {
               sx={{ "& .MuiSlider-markLabel": { color: "white" } }}
             />
 
-            <p className="text-3xl float-left mb-8 font-bold">Add a workout</p>
+            <p className="text-3xl float-left mb-16 font-bold">Add a workout</p>
             <div className="w-full flex flex-col">
               <div className="flex w-full justify-between gap-4 items-center my-4">
                 <p className="text-grayText">1. </p>
@@ -405,46 +405,46 @@ const WorkoutWidget = () => {
                 </button>
               </div>
               <form>
-                <div className="flex justify-start gap-4 items-center my-4 w-[240px]">
-                  <p>Exercise</p>
+                <div className="flex justify-between gap-4 items-center my-4 w-full">
+                  <p className="w-1/4">Exercise</p>
                   <input
                     name="name"
                     placeholder="Insert exercise here..."
-                    className="bg-background p-4 border border-lightRed rounded-lg flex-shrink w-full ml-4"
+                    className="bg-background p-4 border border-lightRed rounded-lg w-full ml-4"
                     value={newExercise.name}
                     onChange={(e) => updateNewExercise(e)}
                   />
                 </div>
 
-                <div className="flex w-full justify-start gap-4 items-center my-4">
-                  <p>Reps</p>
+                <div className="flex w-full justify-between gap-4 items-center my-4">
+                  <p className="w-1/4 text-start">Reps</p>
                   <input
                     name="reps"
                     type="number"
-                    className="bg-background p-4 border border-lightRed rounded-lg"
+                    className="bg-background p-4 border border-lightRed rounded-lg w-full"
                     value={newExercise.reps}
                     onChange={(e) => updateNewExercise(e)}
                   />
                 </div>
 
-                <div className="flex w-full justify-start gap-4 items-center my-4">
-                  <p>Points</p>
+                <div className="flex w-full justify-between gap-4 items-center my-4">
+                  <p className="w-1/4 text-start">Points</p>
                   <input
                     name="points"
                     type="number"
-                    className="bg-background p-4 border border-lightRed rounded-lg"
+                    className="bg-background p-4 border border-lightRed rounded-lg w-full"
                     value={newExercise.points}
                     onChange={(e) => updateNewExercise(e)}
                   />
                 </div>
 
-                <div className="flex w-full justify-start gap-4 items-center my-4">
-                  <p>Type</p>
+                <div className="flex w-full justify-between gap-4 items-center my-4">
+                  <p className="w-1/4 text-start">Type</p>
                   <div className="w-full bg-background p-4 border border-lightRed rounded-lg ">
                     <select
                       name="type"
                       id="type"
-                      className="w-full bg-background border-r-4 border-r-transparent"
+                      className="w-full bg-background border border-lightRed rounded-lg"
                       value={newExercise.type}
                       onChange={(e) => updateNewExercise(e)}
                     >
