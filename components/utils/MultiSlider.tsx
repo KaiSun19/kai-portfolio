@@ -40,7 +40,7 @@ const MultiSlider = ({
   const sliderTrackThumbOneRef = useRef<HTMLDivElement>(null);
   const sliderTrackThumbTwoRef = useRef<HTMLDivElement>(null);
   const sliderTrackThumbThreeRef = useRef<HTMLDivElement>(null);
-  const isDragging = useRef(false);
+  const activePointer = useRef<number | null>(null);
   const draggedThumb = useRef("");
 
   const [thumbPositionOne, setThumbPositionOne] = useState<number>(
@@ -93,6 +93,7 @@ const MultiSlider = ({
       position: "relative",
       width: "100%",
       height: "64px",
+      touchAction: "none",
     },
     track: {
       position: "absolute",
@@ -114,7 +115,8 @@ const MultiSlider = ({
       borderRadius: "9999px",
       transform: "translate(-50%, -50%)",
       cursor: "pointer",
-      zIndex: 100,
+      touchAction: "none",
+      zIndex: 200,
     },
   };
 
@@ -143,9 +145,7 @@ const MultiSlider = ({
     left: `${left}%`,
   });
 
-  const updateThumbPosition = (
-    event: MouseEvent | React.MouseEvent<HTMLDivElement>,
-  ) => {
+  const updateThumbPosition = (event: React.PointerEvent<HTMLDivElement>) => {
     const track = sliderTrackRef.current;
     if (track) {
       const trackRect = track.getBoundingClientRect();
@@ -195,25 +195,48 @@ const MultiSlider = ({
     }
   };
 
-  const handleMouseMove = (event: MouseEvent) => {
-    if (isDragging.current) {
+  const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (activePointer.current === event.pointerId) {
       updateThumbPosition(event);
     }
   };
 
-  const handleMouseUp = () => {
-    // Remove event listeners when the mouse is released
-    document.removeEventListener("mousemove", handleMouseMove);
-    document.removeEventListener("mouseup", handleMouseUp);
-    isDragging.current = false;
+  const handlePointerEnd = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (activePointer.current === event.pointerId) {
+      activePointer.current = null;
+    }
   };
 
-  const handleThumbClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    draggedThumb.current = event.currentTarget.id;
-    isDragging.current = true;
+  const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (activePointer.current !== null || event.button !== 0) return;
+    const track = sliderTrackRef.current;
+    if (!track) return;
+
+    const target = event.target as HTMLElement;
+    if (["thumb-1", "thumb-2", "thumb-3"].includes(target.id)) {
+      draggedThumb.current = target.id;
+    } else {
+      const trackRect = track.getBoundingClientRect();
+      if (!trackRect.width) return;
+      const position =
+        ((event.clientX - trackRect.left) / trackRect.width) * 100;
+      const positions = [
+        thumbPositionOne,
+        thumbPositionTwo,
+        thumbPositionThree,
+      ];
+      const nearest = positions.reduce(
+        (closest, current, index) =>
+          Math.abs(current - position) < Math.abs(positions[closest] - position)
+            ? index
+            : closest,
+        0,
+      );
+      draggedThumb.current = `thumb-${nearest + 1}`;
+    }
+    activePointer.current = event.pointerId;
+    event.currentTarget.setPointerCapture(event.pointerId);
     updateThumbPosition(event);
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
   };
 
   const getColorsWidth = (index) => {
@@ -280,7 +303,14 @@ const MultiSlider = ({
           );
         })}
       </div>
-      <div style={styles.sliderContainer}>
+      <div
+        style={styles.sliderContainer}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerEnd}
+        onPointerCancel={handlePointerEnd}
+        onLostPointerCapture={handlePointerEnd}
+      >
         <div ref={sliderTrackRef} style={styles.track}></div>
         {sliderColors.map((color, i) => {
           const widthAsPercentage = getColorsWidth(i);
@@ -295,19 +325,16 @@ const MultiSlider = ({
           id="thumb-1"
           ref={sliderTrackThumbOneRef}
           style={getThumbStyle(thumbPositionOne)}
-          onMouseDown={handleThumbClick}
         ></div>
         <div
           id="thumb-2"
           ref={sliderTrackThumbTwoRef}
           style={getThumbStyle(thumbPositionTwo)}
-          onMouseDown={handleThumbClick}
         ></div>
         <div
           id="thumb-3"
           ref={sliderTrackThumbThreeRef}
           style={getThumbStyle(thumbPositionThree)}
-          onMouseDown={handleThumbClick}
         ></div>
       </div>
     </>
